@@ -10,8 +10,8 @@ export class TranscodeConsumer {
 
         console.log(`[${job.id}] Start transcoding...`);
 
-        const inputPath = path.join(__dirname, `../../sample.mp4`);
-        const outputPath = path.join(__dirname, `../../sample.mp3`);
+        const inputPath = path.join(__dirname, `../../uploads/${job.data.fileName}`);
+        const outputPath = path.join(__dirname, `../../uploads/${job.data.fileName}.mp3`);
         await new Promise((resolve, reject) => {
             Ffmpeg(inputPath)
                 .output(outputPath)

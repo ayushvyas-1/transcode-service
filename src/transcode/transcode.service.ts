@@ -6,7 +6,7 @@ import { Queue } from 'bullmq';
 export class TranscodeService {
     constructor(@InjectQueue('transcode') private readonly transcodeQueue: Queue) { }
 
-    async transcode() {
-        await this.transcodeQueue.add('transcode', { fileName: './File.mp4' });
+    async transcode(fileName: string) {
+        await this.transcodeQueue.add('transcode', { fileName: fileName });
     }
 }
