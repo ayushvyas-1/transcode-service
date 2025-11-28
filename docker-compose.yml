@@ -1,0 +1,40 @@
+services:
+  # 1. The Database
+  redis:
+    image: redis:alpine
+    container_name: transcode_redis
+    ports:
+      - "6379:6379"
+
+  # 2. The API Service (Handles HTTP requests)
+  api:
+    build: ./backend
+    container_name: transcode_api
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    volumes:
+      - ./uploads:/app/uploads # Share the uploads folder with host
+
+  # 3. The Worker Service (Processes the queue)
+  worker:
+    build: ./backend
+    container_name: transcode_worker
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    volumes:
+      - ./uploads:/app/uploads # Worker needs access to the same files!
+
+  # 4. The Frontend
+  web:
+    build: ./frontend
+    container_name: transcode_web
+    ports:
+      - "3001:3000" # Map host 3001 to container 3000
+    depends_on:
+      - api
